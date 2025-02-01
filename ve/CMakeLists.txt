@@ -15,12 +15,14 @@ set(SRC_FILES
     ${SRC_DIR}/core/resource_manager.cpp
     ${SRC_DIR}/core/window.cpp
     ${SRC_DIR}/core/application.cpp
+    ${SRC_DIR}/core/input.cpp
 )
 
 add_library(${PROJECT_NAME} ${SRC_FILES})
 target_include_directories(${PROJECT_NAME} PUBLIC
     ${EXT_DIR}/glfw/include
     ${EXT_DIR}/glad/include
+    ${EXT_DIR}/glm
     ${EXT_DIR}/griffinLogCpp/src
 
     ${SRC_DIR}
@@ -28,4 +30,5 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 target_link_libraries(${PROJECT_NAME} PUBLIC
     OpenGL::GL
     glfw
+    glm::glm
 )

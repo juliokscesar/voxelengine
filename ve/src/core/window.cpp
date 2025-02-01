@@ -24,3 +24,13 @@ bool Window::init() {
     );
     return (m_glfwWindow != nullptr);
 }
+
+bool Window::shouldClose() {
+    if (m_glfwWindow)
+        return glfwWindowShouldClose(m_glfwWindow);
+    return true;
+}
+
+GLFWwindow* Window::glfwWindow() {
+    return m_glfwWindow;
+}

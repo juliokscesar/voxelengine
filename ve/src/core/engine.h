@@ -20,13 +20,17 @@ struct GLLibManager {
 
 class Engine {
 public:
-    Engine();
+    Engine(const WindowProps& winProps);
     ~Engine();
 
+    bool startup();
     bool run();
     void shutdown();
 
 private:
+    bool m_isUp;
+    bool m_isRunning;
+
     GLLibManager m_glLibMgr;
     Renderer m_renderer;
     Window m_window;

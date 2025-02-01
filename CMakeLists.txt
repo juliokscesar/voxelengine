@@ -24,6 +24,10 @@ set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 add_subdirectory(${EXT_DIR}/glfw)
 
+set(GLM_BUILD_TESTS OFF)
+set(BUILD_SHARED_LIBS OFF)
+add_subdirectory(${EXT_DIR}/glm)
+
 set(_CORE_DIR ${PROJECT_SOURCE_DIR}/ve)
 add_subdirectory(${_CORE_DIR})
 
