@@ -23,7 +23,7 @@ public:
     Engine();
     ~Engine();
 
-    bool start();
+    bool run();
     void shutdown();
 
 private:
