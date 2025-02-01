@@ -1,3 +1,6 @@
 [submodule "ext/glfw"]
 	path = ext/glfw
 	url = https://github.com/glfw/glfw.git
+[submodule "ext/griffinLogCpp"]
+	path = ext/griffinLogCpp
+	url = https://github.com/juliokscesar/griffinLogCpp.git
