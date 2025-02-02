@@ -1,5 +1,20 @@
 #pragma once
 
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <unordered_map>
+#include <string>
+#include <filesystem>
+#include <memory>
+#include <utility>
+
+namespace stdfs = std::filesystem;
+
+#ifdef _WIN32
+    #include <windows.h>
+#endif // _WIN32
+
 #ifndef VE_GL_VERSION_MAJOR
     #define VE_GL_VERSION_MAJOR 4
 #endif
@@ -11,9 +26,6 @@
 #include <GLFW/glfw3.h>
 
 #define VE_UNUSED(param) ((void)param)
-
-#include <memory>
-#include <utility>
 
 template<typename T>
 using Scope = std::unique_ptr<T>;

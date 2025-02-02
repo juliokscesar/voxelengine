@@ -1,7 +1,5 @@
 #pragma once
 
-#include <string>
-
 #include "base.h"
 
 struct WindowProps {

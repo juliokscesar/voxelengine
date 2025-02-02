@@ -3,8 +3,6 @@
 #define ACTION 0
 #define MODS 1
 
-#include <unordered_map>
-
 namespace input {
 
 struct KeyState {
@@ -41,7 +39,7 @@ struct MouseTracker {
 };
 static MouseTracker g_mouseTracker;
 
-void keyInputCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+static void keyInputCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (auto state = g_keyStateMap.find(key); state == g_keyStateMap.end())
         g_keyStateMap[key] = KeyState();
 
@@ -58,7 +56,7 @@ void keyInputCallback(GLFWwindow* window, int key, int scancode, int action, int
         keyState.isPressed = false;
 }
 
-void mouseMoveCallback(GLFWwindow* window, double xpos, double ypos) {
+static void mouseMoveCallback(GLFWwindow* window, double xpos, double ypos) {
     if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_NORMAL)
         return;
 
@@ -86,7 +84,7 @@ void mouseMoveCallback(GLFWwindow* window, double xpos, double ypos) {
     g_mouseTracker.yOffset = g_mouseTracker.currY - g_mouseTracker.lastY;
 }
 
-void mouseScrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
+static void mouseScrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
     g_mouseTracker.scrollOffset = static_cast<float>(yoffset);
 }
 
