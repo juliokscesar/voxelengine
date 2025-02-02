@@ -17,7 +17,7 @@ if (MSVC)
         add_compile_options(/Od /Zi)
     elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
         message("MSVC Release build")
-        add_compile_options(/O2 /DNDEBUG)
+        add_compile_options(/O1 /DNDEBUG) # /O2 breaks glad with MSVC Release
     endif()
 else()
     add_compile_options(-Wall -Wextra)

@@ -2,7 +2,6 @@
 
 Window::Window(const WindowProps& winProps)
     : m_winProps(winProps) {
-    this->init();
 }
 
 Window::Window(uint32_t width, uint32_t height, const std::string& title, bool enableVSync, bool enableFullscreen)

@@ -4,29 +4,10 @@
 #include "logging.h"
 #include "shader.h"
 
-void GLLibManager::initGLFW() {
-    glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, VE_GL_VERSION_MAJOR);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, VE_GL_VERSION_MINOR);
-
-    glfwWindowHint(GLFW_FOCUS_ON_SHOW, GLFW_TRUE);
-    isGLFWInit = true;
-}
-
-void GLLibManager::initGLAD() {
-    if (!isCtxSet)
-        return;
-    isGLADInit = (bool)gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-}    
-
-void GLLibManager::terminate() {
-    if (isGLFWInit)
-        glfwTerminate();
-    isGLFWInit = false;
-}
-
 Engine::Engine(const WindowProps& winProps)
     : m_isUp(false), m_isRunning(false), m_window(winProps) {
+
+    g_glLibMgr = std::make_unique<GLLibManager>();
 }
 
 Engine::~Engine() {
@@ -52,8 +33,8 @@ bool Engine::startup() {
     if (m_isUp)
         return true;
 
-    m_glLibMgr.initGLFW();
-    if (!m_glLibMgr.isGLFWInit) {
+    g_glLibMgr->initGLFW();
+    if (!g_glLibMgr->isGLFWInit) {
         grflog::fatal("Unable to start GLFW");
         shutdown();
         return false;
@@ -66,9 +47,9 @@ bool Engine::startup() {
     }
 
     m_renderer.setCtx(m_window.glfwWindow());
-
-    m_glLibMgr.initGLAD();
-    if (!m_glLibMgr.isGLADInit) {
+    g_glLibMgr->isCtxSet = true;
+    g_glLibMgr->initGLAD();
+    if (!g_glLibMgr->isGLADInit) {
         grflog::fatal("Unable to start GLAD");
         shutdown();
         return false;
@@ -144,13 +125,15 @@ bool Engine::run() {
 
         if (input::isKeyPressed(GLFW_KEY_ESCAPE))
             m_window.notifyClose();
+        if (input::isKeyPressed(GLFW_KEY_G))
+            grflog::info("GL calls: {}", g_glLibMgr->glCalls);
 
         // here goes the main rendering
         // lets separate the rendering in layers (one for the game, one for the ui, any post processing in between etc)
 
         baseShader.use();
         glBindVertexArray(vao);
-        glDrawElements(GL_TRIANGLES, nind, GL_UNSIGNED_INT, 0);
+        GLCALL(glDrawElements(GL_TRIANGLES, nind, GL_UNSIGNED_INT, 0));
 
         m_renderer.frameEnd();
         glfwPollEvents();
@@ -163,5 +146,5 @@ void Engine::shutdown() {
     m_isUp = false;
     m_isRunning = false;
 
-    m_glLibMgr.terminate();
+    g_glLibMgr->terminate();
 }
