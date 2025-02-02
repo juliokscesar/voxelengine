@@ -40,6 +40,8 @@ struct MouseTracker {
 static MouseTracker g_mouseTracker;
 
 static void keyInputCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    VE_UNUSED(window); VE_UNUSED(scancode);
+
     if (auto state = g_keyStateMap.find(key); state == g_keyStateMap.end())
         g_keyStateMap[key] = KeyState();
 
@@ -85,6 +87,8 @@ static void mouseMoveCallback(GLFWwindow* window, double xpos, double ypos) {
 }
 
 static void mouseScrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
+    VE_UNUSED(window); VE_UNUSED(xoffset);
+
     g_mouseTracker.scrollOffset = static_cast<float>(yoffset);
 }
 

@@ -3,7 +3,7 @@
 #include <fstream>
 
 namespace utils {
-    bool readFileContent(const std::filesystem::path& path, std::string& out) {
+    bool readFileToStr(const std::filesystem::path& path, std::string& out) {
         out.clear();
 
         std::ifstream file(path);

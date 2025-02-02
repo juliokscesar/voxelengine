@@ -9,9 +9,26 @@ if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE DEBUG)
 endif()
 
-if(NOT MSVC)
-    set(CMAKE_CXX_FLAGS_DEBUG "-g")
-    set(CMAKE_CXX_FLAGS_RELEASE "-O2")
+if (MSVC)
+    add_compile_options(/W4)
+
+    if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+        message("MSVC Debug build")
+        add_compile_options(/Od /Zi)
+    elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
+        message("MSVC Release build")
+        add_compile_options(/O2 /DNDEBUG)
+    endif()
+else()
+    add_compile_options(-Wall -Wextra)
+
+    if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+        message("GCC Debug build")
+        add_compile_options(-g)
+    elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
+        message("GCC Release build")
+        add_compile_options(-O2)
+    endif()
 endif()
 
 find_package(OpenGL REQUIRED)
@@ -39,6 +56,9 @@ set(SRC_FILES
     ${SRC_DIR}/core/resource_manager.cpp
     ${SRC_DIR}/core/window.cpp
     ${SRC_DIR}/core/input.cpp
+    ${SRC_DIR}/core/shader.cpp
+
+    ${SRC_DIR}/utils/file_handler.cpp
 
     ${SRC_DIR}/main.cpp
 )

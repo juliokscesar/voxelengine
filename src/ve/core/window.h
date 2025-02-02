@@ -26,6 +26,7 @@ public:
     
     bool init();
     bool shouldClose();
+    void notifyClose();
     GLFWwindow* glfwWindow();
 
 private:

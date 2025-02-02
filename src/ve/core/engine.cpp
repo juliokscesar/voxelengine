@@ -2,6 +2,7 @@
 
 #include "input.h"
 #include "logging.h"
+#include "shader.h"
 
 void GLLibManager::initGLFW() {
     glfwInit();
@@ -31,7 +32,6 @@ Engine::Engine(const WindowProps& winProps)
 Engine::~Engine() {
     shutdown();
 }
-
 
 struct ResizeProperties {
     bool hasChanged = false;
@@ -92,12 +92,17 @@ bool Engine::run() {
     if (!m_isUp && !startup())
         return false;
 
-    // Triangle
     float vertices[] = {
-        -0.5f, -0.5f, 0.0f,
-         0.5f, -0.5f, 0.0f,
-         0.0f,  0.5f, 0.0f,
+        -0.5f, -0.5f, 0.0f, // lb
+         0.5f, -0.5f, 0.0f, // rb
+         0.5f,  0.5f, 0.0f, // ru
+        -0.5f,  0.5f, 0.0f  // lu
     };
+    uint32_t indices[] = {
+        3, 0, 1,
+        1, 2, 3,
+    };
+    const size_t nind = sizeof(indices) / sizeof(indices[0]);
 
     uint32_t vao{};
     glGenVertexArrays(1, &vao);
@@ -108,83 +113,44 @@ bool Engine::run() {
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
+    uint32_t ebo{};
+    glGenBuffers(1, &ebo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
     // pos vert attrb
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (void*)0);
     glEnableVertexAttribArray(0);
 
     glBindVertexArray(0);
 
-    // TODO: shader, resource manager and file handler
-    std::ifstream sFile("D:\\Dev\\voxelengine\\shaders\\basic.vert", std::ios::binary);
-    if (!sFile.is_open())
-        grflog::critical("Unable to open vert file");
-    std::string vertSrcStr = std::string(
-        std::istreambuf_iterator<char>(sFile), std::istreambuf_iterator<char>()
-    ).c_str();
-    std::cout << vertSrcStr << std::endl;
-    sFile.close();
-    sFile.open("D:\\Dev\\voxelengine\\shaders\\basic.frag", std::ios::binary);
-    if (!sFile.is_open())
-        grflog::critical("Unable to open frag file");
-    std::string fragSrcStr = std::string(
-        std::istreambuf_iterator<char>(sFile), std::istreambuf_iterator<char>()
-    ).c_str();
-    std::cout << fragSrcStr << std::endl;
-
-    int success = 0;
-    char infoLog[512];
-
-    uint32_t vertShader = glCreateShader(GL_VERTEX_SHADER);
-    const char* vertSrc = vertSrcStr.c_str();
-    glShaderSource(vertShader, 1, &vertSrc, nullptr);
-    glCompileShader(vertShader);
-
-    glGetShaderiv(vertShader, GL_COMPILE_STATUS, &success);
-    if (!success) {
-        glGetShaderInfoLog(vertShader, sizeof(infoLog), nullptr, infoLog);
-        grflog::fatal("Error compiling vertex shader: ", infoLog);
+    Shader baseShader(
+        "D:\\Dev\\voxelengine\\shaders\\basic.vert",
+        "D:\\Dev\\voxelengine\\shaders\\basic.frag",
+        true
+    );
+    if (!baseShader.isUsable()) {
+        grflog::fatal("Unable to use base shader");
         return false;
     }
+    baseShader.use();
 
-    uint32_t fragShader = glCreateShader(GL_FRAGMENT_SHADER);
-    const char* fragSrc = fragSrcStr.c_str();
-    glShaderSource(fragShader, 1, &fragSrc, nullptr);
-    glCompileShader(fragShader);
-
-    glGetShaderiv(fragShader, GL_COMPILE_STATUS, &success);
-    if (!success) {
-        glGetShaderInfoLog(fragShader, sizeof(infoLog), nullptr, infoLog);
-        grflog::fatal("Error compiling fragment shader: {}", infoLog);
-        return false;
-    }
-
-    uint32_t baseShader = glCreateProgram();
-    glAttachShader(baseShader, vertShader);
-    glAttachShader(baseShader, fragShader);
-    glLinkProgram(baseShader);
+    m_renderer.setClearColor(0.5f, 0.1f, 0.8f);
     
-    glValidateProgram(baseShader);
-    glGetProgramiv(baseShader, GL_LINK_STATUS, &success);
-    if (!success) {
-        glGetProgramInfoLog(baseShader, sizeof(infoLog), nullptr, infoLog);
-        grflog::fatal("Failed to link shader program: {}", infoLog);
-        return false;
-    }
-
-    glDeleteShader(vertShader);
-    glDeleteShader(fragShader);
-
     // enter main loop
     m_isRunning = true;
     while (!m_window.shouldClose()) {
         m_renderer.frameStart();
 
+        if (input::isKeyPressed(GLFW_KEY_ESCAPE))
+            m_window.notifyClose();
+
         // here goes the main rendering
         // lets separate the rendering in layers (one for the game, one for the ui, any post processing in between etc)
 
-        glUseProgram(baseShader);
+        baseShader.use();
         glBindVertexArray(vao);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawElements(GL_TRIANGLES, nind, GL_UNSIGNED_INT, 0);
 
         m_renderer.frameEnd();
         glfwPollEvents();
