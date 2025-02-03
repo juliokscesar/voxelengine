@@ -2,6 +2,9 @@
 
 #include "core/base.h"
 
+#include <glm/vec3.hpp>
+#include <glm/mat4x4.hpp>
+
 #define VE_DELETED_SHADER UINT32_MAX
 
 class Shader {
@@ -42,6 +45,12 @@ public:
     void clear();
     inline uint32_t getProgramId() const { return m_id; }
     inline bool isUsable() const { return m_isUsable; };
+
+    void setUniformUInt(const std::string& name, uint32_t value) const;
+    void setUniformFloat(const std::string& name, float value) const;
+    void setUniformVec3(const std::string& name, const glm::vec3& vec) const;
+    void setUniformMat4(const std::string& name, const glm::mat4& mat) const;
+    
 
 private:
     bool initShader(const stdfs::path& vertPath, const stdfs::path& fragPath);

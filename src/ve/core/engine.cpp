@@ -1,8 +1,12 @@
 #include "engine.h"
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 #include "input.h"
 #include "logging.h"
 #include "render/shader.h"
+#include "components/transform.h"
 
 Engine::Engine(const WindowProps& winProps)
     : m_isUp(false), m_isRunning(false), m_window(winProps) {
@@ -60,6 +64,8 @@ bool Engine::startup() {
     m_renderer.resizeViewport(wp.width, wp.height);
     glfwSetFramebufferSizeCallback(m_window.glfwWindow(), resizeCallback);
 
+    m_renderer.setDepthTest(true);
+
     input::registerCallbacks(m_window.glfwWindow());
     input::setCursorMode(GLFW_CURSOR_DISABLED);
 
@@ -73,51 +79,19 @@ bool Engine::run() {
     if (!m_isUp && !startup())
         return false;
 
-    float vertices[] = {
-        -0.5f, -0.5f, 0.0f, // lb
-         0.5f, -0.5f, 0.0f, // rb
-         0.5f,  0.5f, 0.0f, // ru
-        -0.5f,  0.5f, 0.0f  // lu
-    };
-    uint32_t indices[] = {
-        3, 0, 1,
-        1, 2, 3,
-    };
-    const size_t nind = sizeof(indices) / sizeof(indices[0]);
+    Ref<Shader> shader = m_resMgr.loadShader("D:\\Dev\\voxelengine\\shaders\\material.vert", "D:\\Dev\\voxelengine\\shaders\\material.frag");
+    StaticMesh cube = PrimitiveMesh::cube();
+    cube.subMeshes()[0].material->shader = shader;
+    cube.subMeshes()[0].material->useLighting = false;
+    TransformComponent transform;
 
-    uint32_t vao{};
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
+    const float ar = (float)m_window.getWinProps().width/(float)m_window.getWinProps().height;
+    glm::mat4 proj = glm::perspective(glm::radians(45.0f), ar, 0.1f, 100.0f);
 
-    uint32_t vbo{};
-    glGenBuffers(1, &vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glm::mat4 view(1.0f);
+    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 
-    uint32_t ebo{};
-    glGenBuffers(1, &ebo);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-    // pos vert attrb
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glBindVertexArray(0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-    Shader baseShader(
-        "D:\\Dev\\voxelengine\\shaders\\basic.vert",
-        "D:\\Dev\\voxelengine\\shaders\\basic.frag",
-        true
-    );
-    if (!baseShader.isUsable()) {
-        grflog::fatal("Unable to use base shader");
-        return false;
-    }
-    baseShader.use();
-
-    m_renderer.setClearColor(0.5f, 0.1f, 0.8f);
+    m_renderer.setClearColor(0.3f, 0.3f, 0.3f);
     
     // enter main loop
     m_isRunning = true;
@@ -131,10 +105,11 @@ bool Engine::run() {
 
         // here goes the main rendering
         // lets separate the rendering in layers (one for the game, one for the ui, any post processing in between etc)
-
-        baseShader.use();
-        glBindVertexArray(vao);
-        GLCALL(glDrawElements(GL_TRIANGLES, nind, GL_UNSIGNED_INT, 0));
+        shader->use();
+        shader->setUniformMat4("model", transform.getTransformMatrix());
+        shader->setUniformMat4("view", view);
+        shader->setUniformMat4("projection", proj);
+        m_renderer.draw(cube);
 
         m_renderer.frameEnd();
         glfwPollEvents();

@@ -42,7 +42,6 @@ void VertexArray::unbind() {
 
 IndexBuffer::IndexBuffer(const std::vector<uint32_t>& indices) {
     nIndices = static_cast<uint32_t>(indices.size());
-
     glGenBuffers(1, &eboID);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, nIndices * sizeof(uint32_t), indices.data(), GL_STATIC_DRAW);

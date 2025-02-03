@@ -4,6 +4,7 @@ project(voxelengine)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Debug")
@@ -49,18 +50,23 @@ add_subdirectory(${EXT_DIR}/glm)
 add_definitions(-DVE_GL_VERSION_MAJOR=4 -DVE_GL_VERSION_MINOR=6)
 set(SRC_FILES
     ${EXT_DIR}/glad/src/glad.c
+    ${EXT_DIR}/stb/stb.c
     ${EXT_DIR}/griffinLogCpp/src/griffinLog/griffinLog.cpp
 
     ${SRC_DIR}/core/engine.cpp
     ${SRC_DIR}/core/resource_manager.cpp
     ${SRC_DIR}/core/window.cpp
     ${SRC_DIR}/core/input.cpp
+    ${SRC_DIR}/core/logging.cpp
 
     ${SRC_DIR}/render/renderer.cpp
     ${SRC_DIR}/render/shader.cpp
     ${SRC_DIR}/render/vertex.cpp
     ${SRC_DIR}/render/texture.cpp
     ${SRC_DIR}/render/staticmesh.cpp
+    ${SRC_DIR}/render/material.cpp
+
+    ${SRC_DIR}/components/transform.cpp
 
     ${SRC_DIR}/utils/file_handler.cpp
 
@@ -69,6 +75,7 @@ set(SRC_FILES
 
 add_executable(${PROJECT_NAME} ${SRC_FILES})
 target_include_directories(${PROJECT_NAME} PUBLIC
+    ${EXT_DIR}
     ${EXT_DIR}/glfw/include
     ${EXT_DIR}/glad/include
     ${EXT_DIR}/glm

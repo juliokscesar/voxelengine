@@ -4,6 +4,7 @@
 #include <fstream>
 #include <vector>
 #include <unordered_map>
+#include <tuple>
 #include <string>
 #include <filesystem>
 #include <memory>

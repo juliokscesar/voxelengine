@@ -10,6 +10,9 @@ struct Vertex {
     glm::vec3 normal;
     glm::vec2 texCoords;
 
+    Vertex()
+        : position(0), normal(0), texCoords(0) {}
+
     Vertex(const glm::vec3& pos, const glm::vec3& normal, const glm::vec2& texCoords)
         : position(pos), normal(normal), texCoords(texCoords) {}
 };
@@ -19,11 +22,12 @@ struct VertexArray {
     uint32_t vaoID;
     uint32_t nVertices;
     
+    VertexArray()
+        : vboID(0), vaoID(0), nVertices(0) {}
+
     VertexArray(const std::vector<Vertex>& verticesData);
     VertexArray(const VertexArray& other);
     VertexArray(VertexArray&& other);
-
-    VertexArray() = delete;
 
     VertexArray& operator=(const VertexArray& other) {
         if (this != &other) {
@@ -51,11 +55,12 @@ struct IndexBuffer {
     uint32_t eboID;
     uint32_t nIndices;
 
+    IndexBuffer()
+        : eboID(0), nIndices(0) {}
+
     IndexBuffer(const std::vector<uint32_t>& indices);
     IndexBuffer(const IndexBuffer& other);
     IndexBuffer(IndexBuffer&& other);
-
-    IndexBuffer() = delete;
 
     IndexBuffer& operator=(const IndexBuffer& other) {
         if (this != &other) {

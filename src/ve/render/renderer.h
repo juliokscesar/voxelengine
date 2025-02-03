@@ -21,8 +21,8 @@ public:
     void clearBuffers();
     void frameEnd();
 
-    void draw(const VertexArray& va, const IndexBuffer& ib);
-    void draw(const StaticMesh& mesh);
+    void draw(const VertexArray& va, const IndexBuffer& ib) const;
+    void draw(const StaticMesh& mesh) const;
 
     void setClearColor(const glm::vec3& rgb);
     void setClearColor(float r, float g, float b);

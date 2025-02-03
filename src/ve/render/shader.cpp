@@ -1,5 +1,7 @@
 #include "shader.h"
 
+#include <glm/gtc/type_ptr.hpp>
+
 #include "utils/file_handler.h"
 #include "core/logging.h"
 
@@ -85,6 +87,25 @@ bool Shader::compile() {
 void Shader::clear() {
     clearShaders();
     clearProgram();
+}
+
+
+#define GL_ULOC(str) glGetUniformLocation(m_id, str.c_str())
+
+void Shader::setUniformUInt(const std::string &name, uint32_t value) const {
+    glUniform1ui(GL_ULOC(name), value);
+}
+
+void Shader::setUniformFloat(const std::string &name, float value) const {
+    glUniform1f(GL_ULOC(name), value);
+}
+
+void Shader::setUniformVec3(const std::string &name, const glm::vec3 &vec) const {
+    glUniform3fv(GL_ULOC(name), 1, glm::value_ptr(vec));
+}
+
+void Shader::setUniformMat4(const std::string &name, const glm::mat4 &mat) const {
+    glUniformMatrix4fv(GL_ULOC(name), 1, GL_FALSE, glm::value_ptr(mat));
 }
 
 bool Shader::initShader(const stdfs::path& vertPath, const stdfs::path& fragPath) {

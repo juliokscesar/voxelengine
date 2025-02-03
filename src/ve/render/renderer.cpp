@@ -33,6 +33,18 @@ void Renderer::frameEnd() {
     glfwSwapBuffers(m_ctxWindow);
 }
 
+void Renderer::draw(const VertexArray &va, const IndexBuffer &ib) const {
+    glBindVertexArray(va.vaoID);
+    GLCALL(glDrawElements(GL_TRIANGLES, ib.nIndices, GL_UNSIGNED_INT, 0));
+}
+
+void Renderer::draw(const StaticMesh &mesh) const {
+    for (const auto& submesh : mesh.subMeshes()) {
+        submesh.material->enableMaterialShader();
+        draw(submesh.va, submesh.ib);
+    }
+}
+
 void Renderer::setClearColor(const glm::vec3& rgb) {
     m_clearBufferColor = rgb;
 }

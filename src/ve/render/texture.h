@@ -53,7 +53,7 @@ public:
 
     void assignRenderData(uint8_t* data, const Texture2DProperties& props, uint32_t unit = 0);
     void bind() const;
-    void clean();
+    void clear();
 
 private:
     uint32_t m_glID     = 0;
@@ -63,6 +63,6 @@ private:
     
     GLint m_wrapS       = GL_REPEAT;
     GLint m_wrapT       = GL_REPEAT;
-    GLint m_minFilter   = GL_LINEAR;
-    GLint m_magFilter   = GL_LINEAR_MIPMAP_NEAREST;
+    GLint m_minFilter   = GL_LINEAR_MIPMAP_NEAREST;
+    GLint m_magFilter   = GL_LINEAR;
 };

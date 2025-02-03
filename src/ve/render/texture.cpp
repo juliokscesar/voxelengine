@@ -45,7 +45,7 @@ void Texture2D::assignRenderData(uint8_t *data, const Texture2DProperties &props
     m_props = props;
 
     if (m_glID != GL_NONE)
-        clean();
+        clear();
 
     glGenTextures(1, &m_glID);
     bind();
@@ -64,7 +64,7 @@ void Texture2D::bind() const {
     glBindTexture(GL_TEXTURE_2D, m_glID);
 }
 
-void Texture2D::clean() {
+void Texture2D::clear() {
     glDeleteTextures(1, &m_glID);
     m_glID = 0;
 }
