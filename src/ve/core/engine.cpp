@@ -104,6 +104,7 @@ bool Engine::run() {
     glEnableVertexAttribArray(0);
 
     glBindVertexArray(0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
     Shader baseShader(
         "D:\\Dev\\voxelengine\\shaders\\basic.vert",
