@@ -1,7 +1,7 @@
 #include "shader.h"
 
 #include "utils/file_handler.h"
-#include "logging.h"
+#include "core/logging.h"
 
 
 Shader::Shader(const stdfs::path& vertPath, const stdfs::path& fragPath, bool compileOnLoad)
@@ -18,8 +18,28 @@ Shader::Shader(const stdfs::path& vertPath, const stdfs::path& fragPath, bool co
         compile();
 }
 
+Shader::Shader(const Shader &other)
+    : m_id(other.m_id)
+    , m_vertID(other.m_vertID)
+    , m_fragID(other.m_fragID)
+    , m_isUsable(other.m_isUsable)
+    , m_isCreated(other.m_isCreated)
+    , m_isCompiled(other.m_isCompiled)
+    , m_isLinked(other.m_isLinked)
+    , m_isDeleteMarked(other.m_isDeleteMarked) {}
+
+Shader::Shader(Shader &&other)
+    : m_id(std::move(other.m_id))
+    , m_vertID(std::move(other.m_vertID))
+    , m_fragID(std::move(other.m_fragID))
+    , m_isUsable(std::move(other.m_isUsable))
+    , m_isCreated(std::move(other.m_isCreated))
+    , m_isCompiled(std::move(other.m_isCompiled))
+    , m_isLinked(std::move(other.m_isLinked))
+    , m_isDeleteMarked(std::move(other.m_isDeleteMarked)) {}
+
 Shader::~Shader() {
-    clear();
+    // clear();
 }
 
 void Shader::use() {

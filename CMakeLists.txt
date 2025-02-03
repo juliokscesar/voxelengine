@@ -6,7 +6,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 20)
 
 if (NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE DEBUG)
+    set(CMAKE_BUILD_TYPE "Debug")
 endif()
 
 if (MSVC)
@@ -52,11 +52,15 @@ set(SRC_FILES
     ${EXT_DIR}/griffinLogCpp/src/griffinLog/griffinLog.cpp
 
     ${SRC_DIR}/core/engine.cpp
-    ${SRC_DIR}/core/renderer.cpp
     ${SRC_DIR}/core/resource_manager.cpp
     ${SRC_DIR}/core/window.cpp
     ${SRC_DIR}/core/input.cpp
-    ${SRC_DIR}/core/shader.cpp
+
+    ${SRC_DIR}/render/renderer.cpp
+    ${SRC_DIR}/render/shader.cpp
+    ${SRC_DIR}/render/vertex.cpp
+    ${SRC_DIR}/render/texture.cpp
+    ${SRC_DIR}/render/staticmesh.cpp
 
     ${SRC_DIR}/utils/file_handler.cpp
 

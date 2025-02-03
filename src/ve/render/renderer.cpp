@@ -1,7 +1,5 @@
 #include "renderer.h"
 
-#include "base.h"
-
 Renderer::Renderer()
     : m_ctxWindow(nullptr), m_bufferBits(GL_COLOR_BUFFER_BIT) {
 }

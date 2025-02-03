@@ -1,8 +1,11 @@
 #pragma once
 
-#include "base.h"
+#include "core/base.h"
 
 #include <glm/vec3.hpp>
+
+#include "vertex.h"
+#include "staticmesh.h"
 
 class Renderer {
 public:
@@ -17,6 +20,9 @@ public:
     void frameStart();
     void clearBuffers();
     void frameEnd();
+
+    void draw(const VertexArray& va, const IndexBuffer& ib);
+    void draw(const StaticMesh& mesh);
 
     void setClearColor(const glm::vec3& rgb);
     void setClearColor(float r, float g, float b);

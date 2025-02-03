@@ -2,7 +2,7 @@
 
 #include "input.h"
 #include "logging.h"
-#include "shader.h"
+#include "render/shader.h"
 
 Engine::Engine(const WindowProps& winProps)
     : m_isUp(false), m_isRunning(false), m_window(winProps) {

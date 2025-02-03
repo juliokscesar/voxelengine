@@ -56,19 +56,18 @@ struct GLLibManager {
     }
 };
 static std::unique_ptr<GLLibManager> g_glLibMgr = std::make_unique<GLLibManager>();
-
 #define GLCALL(F) g_glLibMgr->glCalls++;F
 
 template<typename T>
 using Scope = std::unique_ptr<T>;
 template<typename T, typename ...Args>
-constexpr Scope<T> CreateScope(Args&& ... args) {
+constexpr Scope<T> createScope(Args&& ... args) {
     return std::make_unique<T>(T(std::forward<Args>(args)...));
 }
 
 template<typename T>
 using Ref = std::shared_ptr<T>;
 template<typename T, typename ...Args>
-constexpr Ref<T> CreateRef(Args&& ... args) {
+constexpr Ref<T> createRef(Args&& ... args) {
     return std::make_shared<T>(T(std::forward<Args>(args)...));
 }

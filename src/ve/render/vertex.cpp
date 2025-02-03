@@ -1,7 +1,7 @@
 #include "vertex.h"
 
 VertexArray::VertexArray(const std::vector<Vertex>& verticesData) {
-    nVertices = verticesData.size();
+    nVertices = static_cast<uint32_t>(verticesData.size());
 
     glGenVertexArrays(1, &vaoID);
     glBindVertexArray(vaoID);
@@ -41,7 +41,7 @@ void VertexArray::unbind() {
 }
 
 IndexBuffer::IndexBuffer(const std::vector<uint32_t>& indices) {
-    nIndices = indices.size();
+    nIndices = static_cast<uint32_t>(indices.size());
 
     glGenBuffers(1, &eboID);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
