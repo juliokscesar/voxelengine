@@ -9,8 +9,11 @@
 #include <filesystem>
 #include <memory>
 #include <utility>
+#include <chrono>
 
 namespace stdfs = std::filesystem;
+
+using hrclock = std::chrono::high_resolution_clock;
 
 #ifdef _WIN32
     #include <windows.h>

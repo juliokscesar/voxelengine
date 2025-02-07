@@ -29,6 +29,10 @@ public:
     void notifyClose();
     GLFWwindow* glfwWindow();
 
+    inline void setWidth(uint32_t width)    { m_winProps.width  = width; }
+    inline void setHeight(uint32_t height)  { m_winProps.height = height; }
+    inline void setDimensions(uint32_t width, uint32_t height) { m_winProps.width = width; m_winProps.height = height; }
+
 private:
     WindowProps m_winProps;
     GLFWwindow* m_glfwWindow;

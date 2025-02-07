@@ -31,6 +31,7 @@ public:
     void setBlending(bool enabled, GLenum func = GL_ONE_MINUS_SRC_ALPHA);
     // TODO: how am i going to implement all these enable and disable options?
     void setStencilTest(bool enabled, GLenum func = GL_NOTEQUAL); // NOT IMPLEMENTED!!!
+    void setCulling(bool enabled, GLenum face = GL_BACK, GLenum order = GL_CCW);
 
 private:
     GLFWwindow* m_ctxWindow;

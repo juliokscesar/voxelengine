@@ -67,6 +67,7 @@ set(SRC_FILES
     ${SRC_DIR}/render/material.cpp
 
     ${SRC_DIR}/components/transform.cpp
+    ${SRC_DIR}/components/camera.cpp
 
     ${SRC_DIR}/utils/file_handler.cpp
 

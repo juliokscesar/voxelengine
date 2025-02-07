@@ -78,3 +78,13 @@ void Renderer::setBlending(bool enabled, GLenum func) {
     else
         glDisable(GL_BLEND);
 }
+
+void Renderer::setCulling(bool enabled, GLenum face, GLenum order) {
+    if (enabled) {
+        glEnable(GL_CULL_FACE);
+        glCullFace(face);
+        glFrontFace(order);
+    }
+    else
+        glDisable(GL_CULL_FACE);
+}

@@ -7,6 +7,7 @@
 #include "logging.h"
 #include "render/shader.h"
 #include "components/transform.h"
+#include "components/camera.h"
 
 Engine::Engine(const WindowProps& winProps)
     : m_isUp(false) 
@@ -69,6 +70,7 @@ bool Engine::startup() {
     glfwSetFramebufferSizeCallback(m_window->glfwWindow(), resizeCallback);
 
     m_renderer->setDepthTest(true);
+    m_renderer->setCulling(true, GL_BACK, GL_CCW);
 
     input::registerCallbacks(m_window->glfwWindow());
     input::setCursorMode(GLFW_CURSOR_DISABLED);
@@ -100,17 +102,34 @@ bool Engine::run() {
 
     GLCHECK("");
 
-    const float ar = (float)m_window->getWinProps().width/(float)m_window->getWinProps().height;
-    glm::mat4 proj = glm::perspective(glm::radians(45.0f), ar, 0.1f, 100.0f);
+    Camera camera;
+    float camSpeed = 1.0f;
+    float camSens = 1.0f;
+    camera.transform.setPosition(0.0f, 0.0f, 3.0f);
+    camera.update();
 
-    glm::mat4 view(1.0f);
-    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+    float ar = (float)m_window->getWinProps().width/(float)m_window->getWinProps().height;
+    glm::mat4 proj = glm::perspective(camera.fov, ar, 0.1f, 100.0f);
 
     m_renderer->setClearColor(0.3f, 0.3f, 0.3f);
     
     // enter main loop
     m_isRunning = true;
+    auto lastTime = hrclock::now();
     while (!m_window->shouldClose()) {
+        auto currTime = hrclock::now();
+        float deltaTime = std::chrono::duration<float>(currTime - lastTime).count();
+        lastTime = currTime;
+
+        if (g_resizeProperties.hasChanged) {
+            m_renderer->resizeViewport(g_resizeProperties.width, g_resizeProperties.height);
+            m_window->setDimensions(g_resizeProperties.width, g_resizeProperties.height);
+            ar = static_cast<float>(g_resizeProperties.width) / static_cast<float>(g_resizeProperties.height);
+            g_resizeProperties.hasChanged = false;
+        }
+
+        float speed = camSpeed * deltaTime;
+
         m_renderer->frameStart();
 
         if (input::isKeyPressed(GLFW_KEY_ESCAPE))
@@ -118,11 +137,35 @@ bool Engine::run() {
         if (input::isKeyPressed(GLFW_KEY_G))
             grflog::info("GL calls: {}", g_stats.glCalls);
 
+        // Camera controls
+        if (input::isKeyPressed(GLFW_KEY_W))
+            camera.move(CameraDirection::FORWARD, speed);
+        if (input::isKeyPressed(GLFW_KEY_S))
+            camera.move(CameraDirection::FORWARD, -speed);
+        if (input::isKeyPressed(GLFW_KEY_D))
+            camera.move(CameraDirection::RIGHT, speed);
+        if (input::isKeyPressed(GLFW_KEY_A))
+            camera.move(CameraDirection::RIGHT, -speed);
+        if (input::isKeyPressed(GLFW_KEY_SPACE))
+            camera.move(CameraDirection::UP, speed);
+        if (input::isKeyPressed(GLFW_KEY_LEFT_SHIFT))
+            camera.move(CameraDirection::UP, -speed);
+
+        float mouse = input::getMouseXOffset();
+        if (mouse)
+            camera.addYaw(mouse * camSens);
+        mouse = input::getMouseYOffset();
+        if (mouse)
+            camera.addPitch(-mouse * camSens);
+
+        camera.update();
+        proj = glm::perspective(camera.fov, ar, 0.1f, 100.0f);
+
         // here goes the main rendering
         // lets separate the rendering in layers (one for the game, one for the ui, any post processing in between etc)
         shader->use();
         shader->setUniformMat4("model", transform.getTransformMatrix());
-        shader->setUniformMat4("view", view);
+        shader->setUniformMat4("view", camera.getViewMatrix());
         shader->setUniformMat4("projection", proj);
         m_renderer->draw(cube);
         GLCHECK("");
