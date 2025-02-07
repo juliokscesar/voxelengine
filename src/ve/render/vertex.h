@@ -47,8 +47,9 @@ struct VertexArray {
         return *this;
     }
 
-    void bind();
-    void unbind();    
+    void init(const std::vector<Vertex>& verticesData);
+    void bind() const;
+    void unbind() const;    
 };
 
 struct IndexBuffer {
@@ -78,6 +79,7 @@ struct IndexBuffer {
         return *this;
     }
 
-    void bind();
-    void unbind();
+    void init(const std::vector<uint32_t>& indices);
+    void bind() const;
+    void unbind() const;
 };

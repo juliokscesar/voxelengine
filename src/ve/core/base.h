@@ -28,36 +28,11 @@ namespace stdfs = std::filesystem;
 
 #define VE_UNUSED(param) ((void)param)
 
-struct GLLibManager {
-    bool isGLFWInit = false;
-    bool isCtxSet = false;
-    bool isGLADInit = false;
-    uint32_t glCalls = 0;
-
-    inline void initGLFW() {
-        glfwInit();
-
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, VE_GL_VERSION_MAJOR);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, VE_GL_VERSION_MINOR);
-
-        glfwWindowHint(GLFW_FOCUS_ON_SHOW, GLFW_TRUE);
-        isGLFWInit = true;
-    }
-
-    inline void initGLAD() {
-      if (!isCtxSet)
-        return;
-      isGLADInit = (bool)gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-    }
-
-    inline void terminate() {
-      if (isGLFWInit)
-        glfwTerminate();
-      isGLFWInit = false;
-    }
+struct GlobalStatistics {
+  uint32_t glCalls = 0;
 };
-static std::unique_ptr<GLLibManager> g_glLibMgr = std::make_unique<GLLibManager>();
-#define GLCALL(F) g_glLibMgr->glCalls++;F
+static GlobalStatistics g_stats;
+#define GLCALL(F) g_stats.glCalls++;F
 
 template<typename T>
 using Scope = std::unique_ptr<T>;

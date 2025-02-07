@@ -1,5 +1,7 @@
 #include "renderer.h"
 
+#include "core/logging.h"
+
 Renderer::Renderer()
     : m_ctxWindow(nullptr), m_bufferBits(GL_COLOR_BUFFER_BIT) {
 }
@@ -34,7 +36,7 @@ void Renderer::frameEnd() {
 }
 
 void Renderer::draw(const VertexArray &va, const IndexBuffer &ib) const {
-    glBindVertexArray(va.vaoID);
+    va.bind();
     GLCALL(glDrawElements(GL_TRIANGLES, ib.nIndices, GL_UNSIGNED_INT, 0));
 }
 

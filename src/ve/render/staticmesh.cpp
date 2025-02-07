@@ -1,5 +1,17 @@
 #include "staticmesh.h"
 
+MeshData::MeshData()
+    : va(), ib(), material(nullptr) {}
+
+MeshData::MeshData(const VertexArray& va, const IndexBuffer& ib, Ref<Material> material)
+    : va(va), ib(ib), material(material) {
+    
+    va.bind();
+    ib.bind();
+
+    // va.unbind();
+}
+
 StaticMesh::StaticMesh() {}
 
 StaticMesh::StaticMesh(const VertexArray& va, const IndexBuffer& ib, Ref<Material> material) {

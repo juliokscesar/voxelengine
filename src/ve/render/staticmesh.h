@@ -10,11 +10,8 @@ struct MeshData {
     IndexBuffer ib;
     Ref<Material> material;
 
-    MeshData()
-        : va(), ib(), material(nullptr) {}
-
-    MeshData(const VertexArray& va, const IndexBuffer& ib, Ref<Material> material)
-        : va(va), ib(ib), material(material) {}
+    MeshData();
+    MeshData(const VertexArray& va, const IndexBuffer& ib, Ref<Material> material);
 };
 
 class StaticMesh {
@@ -47,7 +44,8 @@ inline StaticMesh cube() {
         {{-0.5f, -0.5f, -0.5f}, {0.0f, 0.0f, -1.0f}, {1.0f, 0.0f}},
         {{0.5f, -0.5f, -0.5f}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}},
         {{0.5f, 0.5f, -0.5f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f}},
-        {{-0.5f, 0.5f, -0.5f}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f}}};
+        {{-0.5f, 0.5f, -0.5f}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f}}
+    };
 
     std::vector<uint32_t> indices = {
         0, 1, 2, 2, 3, 0, // Front

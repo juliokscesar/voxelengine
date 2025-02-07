@@ -1,6 +1,21 @@
 #include "vertex.h"
 
 VertexArray::VertexArray(const std::vector<Vertex>& verticesData) {
+    init(verticesData);
+}
+
+VertexArray::VertexArray(const VertexArray &other)
+    : vaoID(other.vaoID)
+    , vboID(other.vboID)
+    , nVertices(other.nVertices) {}
+
+VertexArray::VertexArray(VertexArray &&other)
+    : vaoID(std::move(other.vaoID))
+    , vboID(std::move(other.vboID))
+    , nVertices(std::move(other.nVertices)) {}
+
+
+void VertexArray::init(const std::vector<Vertex>& verticesData) {
     nVertices = static_cast<uint32_t>(verticesData.size());
 
     glGenVertexArrays(1, &vaoID);
@@ -21,30 +36,16 @@ VertexArray::VertexArray(const std::vector<Vertex>& verticesData) {
     glEnableVertexAttribArray(2);
 }
 
-VertexArray::VertexArray(const VertexArray &other)
-    : vaoID(other.vaoID)
-    , vboID(other.vboID)
-    , nVertices(other.nVertices) {}
-
-VertexArray::VertexArray(VertexArray &&other)
-    : vaoID(std::move(other.vaoID))
-    , vboID(std::move(other.vboID))
-    , nVertices(std::move(other.nVertices)) {}
-
-
-void VertexArray::bind() {
+void VertexArray::bind() const {
     glBindVertexArray(vaoID);
 }
 
-void VertexArray::unbind() {
+void VertexArray::unbind() const {
     glBindVertexArray(0);
 }
 
 IndexBuffer::IndexBuffer(const std::vector<uint32_t>& indices) {
-    nIndices = static_cast<uint32_t>(indices.size());
-    glGenBuffers(1, &eboID);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, nIndices * sizeof(uint32_t), indices.data(), GL_STATIC_DRAW);
+    init(indices);
 }
 
 IndexBuffer::IndexBuffer(const IndexBuffer &other) 
@@ -55,10 +56,17 @@ IndexBuffer::IndexBuffer(IndexBuffer &&other)
     : eboID(std::move(other.eboID))
     , nIndices(std::move(other.nIndices)) {}
 
-void IndexBuffer::bind() {
+void IndexBuffer::init(const std::vector<uint32_t>& indices) {
+    nIndices = static_cast<uint32_t>(indices.size());
+    glGenBuffers(1, &eboID);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, nIndices * sizeof(uint32_t), indices.data(), GL_STATIC_DRAW);
+}
+
+void IndexBuffer::bind() const {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
 }
 
-void IndexBuffer::unbind() {
+void IndexBuffer::unbind() const {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
