@@ -21,10 +21,8 @@ public:
     StaticMesh(const std::vector<MeshData>& subMeshes);
     StaticMesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, Ref<Material> material);
 
-    inline const std::vector<MeshData>& subMeshes() const { return m_subMeshes; }
 
-private:
-    std::vector<MeshData> m_subMeshes;
+    std::vector<MeshData> subMeshes;
 };
 
 namespace PrimitiveMesh {

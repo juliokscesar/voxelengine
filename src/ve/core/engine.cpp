@@ -84,10 +84,21 @@ bool Engine::run() {
         return false;
 
     Ref<Shader> shader = m_resMgr->loadShader("D:\\Dev\\voxelengine\\shaders\\material.vert", "D:\\Dev\\voxelengine\\shaders\\material.frag");
+    Ref<Texture2D> woodTex = m_resMgr->loadTexture("D:\\Dev\\voxelengine\\assets\\textures\\LargeTreeBark.jpg");
+    Ref<Material> woodMat = createRef<Material>();
+    woodMat->diffuse.push_back(woodTex);
+    woodMat->useLighting = false;
+    woodMat->ambient = glm::vec3(0.4f);
+    woodMat->shininess = 0.1f;
+    woodMat->tilingFactor = 1.0f;
+
     StaticMesh cube = PrimitiveMesh::cube();
-    cube.subMeshes()[0].material->shader = shader;
-    cube.subMeshes()[0].material->useLighting = false;
+    cube.subMeshes[0].material = woodMat;
+    cube.subMeshes[0].material->shader = shader;
+    cube.subMeshes[0].material->useLighting = false;
     TransformComponent transform;
+
+    GLCHECK("");
 
     const float ar = (float)m_window->getWinProps().width/(float)m_window->getWinProps().height;
     glm::mat4 proj = glm::perspective(glm::radians(45.0f), ar, 0.1f, 100.0f);

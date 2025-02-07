@@ -41,7 +41,7 @@ void Renderer::draw(const VertexArray &va, const IndexBuffer &ib) const {
 }
 
 void Renderer::draw(const StaticMesh &mesh) const {
-    for (const auto& submesh : mesh.subMeshes()) {
+    for (const auto& submesh : mesh.subMeshes) {
         submesh.material->enableMaterialShader();
         draw(submesh.va, submesh.ib);
     }
