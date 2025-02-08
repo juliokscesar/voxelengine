@@ -11,6 +11,12 @@ public:
     void init(BlockType fillBlock);
     void update(float deltaTime);
 
+private:
+    void checkAndHideBlocks();
+
+    Block& blockFromRelXYZ(uint32_t x, uint32_t y, uint32_t z);
+    void blockRelXYZFromIdx(uint32_t idx, uint32_t& x, uint32_t& y, uint32_t& z);
+
 public:
     TransformComponent transform;
     std::vector<Block> blocks;

@@ -46,7 +46,7 @@ void Renderer::setRenderCamera(Ref<Camera> camera) {
 }
 
 void Renderer::updateProjection() {
-    float fov = 45.0f, pNear = 0.0f, pFar = 100.0f;
+    float fov = 45.0f, pNear = 0.01f, pFar = 100.0f;
     if (m_renderCamera)
         fov = m_renderCamera->fov, pNear = m_renderCamera->pNear, pFar = m_renderCamera->pFar;
     m_projectionMatrix = glm::perspective(fov, m_aspectRatio, pNear, pFar);
@@ -168,5 +168,15 @@ void Renderer::useMaterialShader(Ref<Shader> shader, Ref<Material> material) con
 
             u += 2;
         }
+    }
+}
+
+void Renderer::toggleWireframe() {
+    if (m_glPolygonMode == GL_FILL) {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        m_glPolygonMode = GL_LINE;
+    } else {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        m_glPolygonMode = GL_FILL;
     }
 }

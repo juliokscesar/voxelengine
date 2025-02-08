@@ -30,7 +30,7 @@ public:
     TransformComponent transform;
     
     float fov = 45.0f;
-    float pNear = 0.0f;
+    float pNear = 0.01f;
     float pFar = 100.0f;
 
 private:

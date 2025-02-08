@@ -47,6 +47,8 @@ public:
 
     void useMaterialShader(Ref<Shader> shader, Ref<Material> material) const;
 
+    void toggleWireframe();
+
 private:
     GLFWwindow* m_ctxWindow;
 
@@ -58,4 +60,6 @@ private:
 
     float m_aspectRatio = 1.0f;
     glm::mat4 m_projectionMatrix;
+
+    GLenum m_glPolygonMode = GL_FILL;
 };
