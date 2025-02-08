@@ -1,5 +1,7 @@
 #include "texture.h"
 
+#include <glm/gtc/type_ptr.hpp>
+
 Texture2D::Texture2D() {}
 
 Texture2D::Texture2D(uint8_t* data, const Texture2DProperties& props, uint32_t unit) {
@@ -67,4 +69,17 @@ void Texture2D::bind() const {
 void Texture2D::clear() {
     glDeleteTextures(1, &m_glID);
     m_glID = 0;
+}
+
+Texture2D Texture2D::fromColor(const glm::u8vec4& rgba, uint32_t width, uint32_t height, uint32_t unit) {
+    // generate bytes data from color
+    std::vector<uint8_t> imgData(width * height * 4);
+    const size_t pixelCount = width * height;
+    const uint8_t* data = reinterpret_cast<const uint8_t*>(glm::value_ptr(rgba));
+    for (size_t i = 0; i < pixelCount; i++)
+        std::copy(data, data + 4, imgData.begin() + i * 4);
+
+    Texture2DProperties texProps(width, height, GL_RGB, GL_RGBA);
+    Texture2D colorTex(imgData.data(), texProps, unit);
+    return colorTex;
 }

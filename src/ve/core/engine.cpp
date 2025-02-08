@@ -8,6 +8,7 @@
 #include "render/shader.h"
 #include "components/transform.h"
 #include "components/camera.h"
+#include "entity.h"
 
 Engine::Engine(const WindowProps& winProps)
     : m_isUp(false) 
@@ -86,22 +87,23 @@ bool Engine::run() {
         return false;
 
     Ref<Shader> shader = m_resMgr->loadShader("D:\\Dev\\voxelengine\\shaders\\material.vert", "D:\\Dev\\voxelengine\\shaders\\material.frag");
-    Ref<Texture2D> woodTex = m_resMgr->loadTexture("D:\\Dev\\voxelengine\\assets\\textures\\LargeTreeBark.jpg");
+    // Ref<Texture2D> woodTex = m_resMgr->loadTexture("D:\\Dev\\voxelengine\\assets\\textures\\joker.jpg");
+    Ref<Texture2D> colorTex = createRef<Texture2D>(Texture2D::fromColor(glm::u8vec4(0, 255, 0, 255), 640, 640));
     Ref<Material> woodMat = createRef<Material>();
-    woodMat->diffuse.push_back(woodTex);
+    woodMat->diffuse.push_back(colorTex);
     woodMat->useLighting = false;
     woodMat->ambient = glm::vec3(0.4f);
     woodMat->shininess = 0.1f;
     woodMat->tilingFactor = 1.0f;
 
-    StaticMesh cube = PrimitiveMesh::cube();
-    cube.subMeshes[0].material = woodMat;
-    cube.subMeshes[0].material->shader = shader;
-    cube.subMeshes[0].material->useLighting = false;
-    TransformComponent transform;
+    StaticMesh cubeMesh = PrimitiveMesh::cube();
+    cubeMesh.subMeshes[0].material = woodMat;
+    cubeMesh.subMeshes[0].material->shader = shader;
+    cubeMesh.subMeshes[0].material->useLighting = false;
+
+    Entity cube(cubeMesh);
 
     GLCHECK("");
-
     Camera camera;
     float camSpeed = 1.0f;
     float camSens = 1.0f;
@@ -159,16 +161,13 @@ bool Engine::run() {
             camera.addPitch(-mouse * camSens);
 
         camera.update();
+        cube.update(deltaTime);
+
         proj = glm::perspective(camera.fov, ar, 0.1f, 100.0f);
 
         // here goes the main rendering
         // lets separate the rendering in layers (one for the game, one for the ui, any post processing in between etc)
-        shader->use();
-        shader->setUniformMat4("model", transform.getTransformMatrix());
-        shader->setUniformMat4("view", camera.getViewMatrix());
-        shader->setUniformMat4("projection", proj);
-        m_renderer->draw(cube);
-        GLCHECK("");
+        m_renderer->draw(cube, camera, proj);
 
         m_renderer->frameEnd();
         glfwPollEvents();

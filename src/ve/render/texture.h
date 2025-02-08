@@ -2,6 +2,8 @@
 
 #include "core/base.h"
 
+#include <glm/vec4.hpp>
+
 struct Texture2DProperties {
     uint32_t width;
     uint32_t height;
@@ -54,6 +56,8 @@ public:
     void assignRenderData(uint8_t* data, const Texture2DProperties& props, uint32_t unit = 0);
     void bind() const;
     void clear();
+
+    static Texture2D fromColor(const glm::u8vec4& rgba, uint32_t width, uint32_t height, uint32_t unit = 0);
 
 private:
     uint32_t m_glID     = 0;

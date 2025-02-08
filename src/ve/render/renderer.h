@@ -6,6 +6,8 @@
 
 #include "vertex.h"
 #include "staticmesh.h"
+#include "core/entity.h"
+#include "components/camera.h"
 
 class Renderer {
 public:
@@ -23,6 +25,7 @@ public:
 
     void draw(const VertexArray& va, const IndexBuffer& ib) const;
     void draw(const StaticMesh& mesh) const;
+    void draw(const Entity& entity, const Camera& camera, const glm::mat4& projection) const;
 
     void setClearColor(const glm::vec3& rgb);
     void setClearColor(float r, float g, float b);

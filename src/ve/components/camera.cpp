@@ -17,10 +17,6 @@ Camera::Camera()
     , m_pitch(0.0f) {
     
     m_lookAtMatrix = glm::lookAt(transform.getPosition(), transform.getPosition() + m_front, m_worldUp);
-    grflog::debug("Camera: pitch={}, yaw={}, pos=({}, {}, {}), front=({}, {}, {}), up=({}, {}, {})",
-                    m_pitch, m_yaw, transform.getPosition().x, transform.getPosition().y, transform.getPosition().z,
-                    m_front.x, m_front.y, m_front.z, m_up.x, m_up.y, m_up.z);
-
 }
 
 Camera::~Camera() {
@@ -42,11 +38,6 @@ void Camera::update(/*float deltaTime*/) {
     m_up = glm::normalize(glm::cross(m_front, m_right));
     m_lookAtMatrix = glm::lookAt(transform.getPosition(), transform.getPosition() + m_front, m_worldUp);
     
-
-    grflog::debug("Camera: pitch={}, yaw={}, pos=({}, {}, {}), front=({}, {}, {}), up=({}, {}, {})",
-                    m_pitch, m_yaw, transform.getPosition().x, transform.getPosition().y, transform.getPosition().z,
-                    m_front.x, m_front.y, m_front.z, m_up.x, m_up.y, m_up.z);
-
     m_updated = false;
 }
 

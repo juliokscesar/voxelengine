@@ -1,6 +1,7 @@
 #include "renderer.h"
 
 #include "core/logging.h"
+#include "components/camera.h"
 
 Renderer::Renderer()
     : m_ctxWindow(nullptr), m_bufferBits(GL_COLOR_BUFFER_BIT) {
@@ -43,6 +44,18 @@ void Renderer::draw(const VertexArray &va, const IndexBuffer &ib) const {
 void Renderer::draw(const StaticMesh &mesh) const {
     for (const auto& submesh : mesh.subMeshes) {
         submesh.material->enableMaterialShader();
+        draw(submesh.va, submesh.ib);
+    }
+}
+
+void Renderer::draw(const Entity& entity, const Camera& camera, const glm::mat4& projection) const {
+    if (!entity.isVisible())
+        return;
+    for (const auto& submesh : entity.mesh.subMeshes) {
+        submesh.material->enableMaterialShader();
+        submesh.material->shader->setUniformMat4("model", entity.transform.getTransformMatrix());
+        submesh.material->shader->setUniformMat4("view", camera.getViewMatrix());
+        submesh.material->shader->setUniformMat4("projection", projection);
         draw(submesh.va, submesh.ib);
     }
 }

@@ -58,6 +58,7 @@ set(SRC_FILES
     ${SRC_DIR}/core/window.cpp
     ${SRC_DIR}/core/input.cpp
     ${SRC_DIR}/core/logging.cpp
+    ${SRC_DIR}/core/entity.cpp
 
     ${SRC_DIR}/render/renderer.cpp
     ${SRC_DIR}/render/shader.cpp

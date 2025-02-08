@@ -21,12 +21,11 @@ public:
     StaticMesh(const std::vector<MeshData>& subMeshes);
     StaticMesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, Ref<Material> material);
 
-
     std::vector<MeshData> subMeshes;
 };
 
 namespace PrimitiveMesh {
-inline StaticMesh cube() {
+inline StaticMesh cube(const glm::u8vec4& matColor = glm::u8vec4(255)) {
     static bool isFirstCall = true;
     static StaticMesh cubeMesh;
     if (!isFirstCall)
@@ -79,7 +78,7 @@ inline StaticMesh cube() {
         20, 21, 23, 23, 21, 22  // Bottom
     };
 
-    cubeMesh = StaticMesh(vertices, indices, Material::blank());
+    cubeMesh = StaticMesh(vertices, indices, Material::fromColor(matColor));
     isFirstCall = false;
     return cubeMesh;
 }
