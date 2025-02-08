@@ -4,7 +4,7 @@
 int main() {
     grflog::info("Hello World!");
 
-    WindowProps winProps(800, 600, "Hello World", true, false);
+    WindowProps winProps(1280, 720, "Hello World", true, false);
     Engine engine(winProps);
     if (!engine.run()) {
         grflog::fatal("Failed to run engine");

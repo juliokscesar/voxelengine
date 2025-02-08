@@ -1,20 +1,25 @@
 #pragma once
 
 #include "core/base.h"
-#include "core/entity.h"
+#include "block.h"
 
 class Chunk {
 public:
-    Chunk(uint32_t dim, uint32_t height);
+    Chunk(uint32_t dim, uint32_t height, BlockType fillBlock);
     ~Chunk();
 
-    void init(uint32_t dim, uint32_t height);
+    void init(BlockType fillBlock);
+    void update(float deltaTime);
 
 public:
     TransformComponent transform;
-    std::vector<Entity> cubes;
+    std::vector<Block> blocks;
+
+    uint32_t dim;
+    uint32_t height;
 
 private:
-    uint32_t m_dim;
-    uint32_t m_height;
+    bool m_hasUpdated = false;
 };
+
+

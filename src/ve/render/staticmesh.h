@@ -28,8 +28,10 @@ namespace PrimitiveMesh {
 inline StaticMesh cube(const glm::u8vec4& matColor = glm::u8vec4(255)) {
     static bool isFirstCall = true;
     static StaticMesh cubeMesh;
-    if (!isFirstCall)
+    if (!isFirstCall) {
+        cubeMesh.subMeshes[0].material = Material::fromColor(matColor);
         return cubeMesh;
+    }
 
     std::vector<Vertex> vertices = {
         // Front face

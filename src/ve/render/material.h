@@ -13,9 +13,9 @@ struct Material {
     float shininess;
     float tilingFactor;
 
-    Ref<Shader> shader;
+    // If this is null, the global default shader is used
+    Ref<Shader> shader = nullptr;
 
-    void enableMaterialShader();
     bool useLighting;
 
     static Ref<Material> fromColor(const glm::u8vec4& rgba) {

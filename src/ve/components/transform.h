@@ -15,6 +15,8 @@ public:
         : m_position(0.0f), m_rotation(0.0f), m_scale(1.0f),
           m_transMatrix(1.0f) {}
 
+    TransformComponent(const glm::vec3& pos, const glm::vec3& rot = glm::vec3(0.0f), const glm::vec3& scale = glm::vec3(1.0f));
+
     TransformComponent(const TransformComponent &other)
         : m_position(other.m_position), m_rotation(other.m_rotation),
           m_scale(other.m_scale), m_transMatrix(1.0f) {}

@@ -23,9 +23,15 @@ public:
     void clearBuffers();
     void frameEnd();
 
+    void setRenderCamera(Ref<Camera> camera);
+    inline Ref<Camera> getRenderCamera() { return m_renderCamera; }
+
+    void updateProjection();
+
     void draw(const VertexArray& va, const IndexBuffer& ib) const;
     void draw(const StaticMesh& mesh) const;
-    void draw(const Entity& entity, const Camera& camera, const glm::mat4& projection) const;
+    void draw(const Entity& entity) const;
+    void draw(const std::vector<Entity>& entities) const;
 
     void setClearColor(const glm::vec3& rgb);
     void setClearColor(float r, float g, float b);
@@ -36,9 +42,20 @@ public:
     void setStencilTest(bool enabled, GLenum func = GL_NOTEQUAL); // NOT IMPLEMENTED!!!
     void setCulling(bool enabled, GLenum face = GL_BACK, GLenum order = GL_CCW);
 
+    inline void setDefaultShader(Ref<Shader> shader) { m_defaultShader = shader; }
+    Ref<Shader> getDefaultShader() { return m_defaultShader; }
+
+    void useMaterialShader(Ref<Shader> shader, Ref<Material> material) const;
+
 private:
     GLFWwindow* m_ctxWindow;
 
     GLbitfield m_bufferBits;
     glm::vec3 m_clearBufferColor;
+
+    Ref<Shader> m_defaultShader;
+    Ref<Camera> m_renderCamera;
+
+    float m_aspectRatio = 1.0f;
+    glm::mat4 m_projectionMatrix;
 };

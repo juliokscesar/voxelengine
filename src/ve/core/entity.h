@@ -7,6 +7,7 @@ class Entity {
 public:
     Entity();
     Entity(const StaticMesh& mesh);
+    Entity(const glm::vec3& initPos, const StaticMesh& mesh);
     ~Entity();
 
     virtual void update(float deltaTime);
@@ -18,6 +19,6 @@ public:
     TransformComponent transform;
     StaticMesh mesh;
 
-private:
+protected:
     bool m_isVisible;
 };

@@ -8,7 +8,7 @@
 #include "render/shader.h"
 #include "components/transform.h"
 #include "components/camera.h"
-#include "entity.h"
+#include "game/chunk.h"
 
 Engine::Engine(const WindowProps& winProps)
     : m_isUp(false) 
@@ -71,7 +71,7 @@ bool Engine::startup() {
     glfwSetFramebufferSizeCallback(m_window->glfwWindow(), resizeCallback);
 
     m_renderer->setDepthTest(true);
-    m_renderer->setCulling(true, GL_BACK, GL_CCW);
+    // m_renderer->setCulling(true, GL_BACK, GL_CCW);
 
     input::registerCallbacks(m_window->glfwWindow());
     input::setCursorMode(GLFW_CURSOR_DISABLED);
@@ -86,32 +86,22 @@ bool Engine::run() {
     if (!m_isUp && !startup())
         return false;
 
-    Ref<Shader> shader = m_resMgr->loadShader("D:\\Dev\\voxelengine\\shaders\\material.vert", "D:\\Dev\\voxelengine\\shaders\\material.frag");
-    // Ref<Texture2D> woodTex = m_resMgr->loadTexture("D:\\Dev\\voxelengine\\assets\\textures\\joker.jpg");
-    Ref<Texture2D> colorTex = createRef<Texture2D>(Texture2D::fromColor(glm::u8vec4(0, 255, 0, 255), 640, 640));
-    Ref<Material> woodMat = createRef<Material>();
-    woodMat->diffuse.push_back(colorTex);
-    woodMat->useLighting = false;
-    woodMat->ambient = glm::vec3(0.4f);
-    woodMat->shininess = 0.1f;
-    woodMat->tilingFactor = 1.0f;
-
-    StaticMesh cubeMesh = PrimitiveMesh::cube();
-    cubeMesh.subMeshes[0].material = woodMat;
-    cubeMesh.subMeshes[0].material->shader = shader;
-    cubeMesh.subMeshes[0].material->useLighting = false;
-
-    Entity cube(cubeMesh);
+    Ref<Shader> shader = m_resMgr->loadShader("D:\\Dev\\voxelengine\\shaders\\material.vert",
+                                              "D:\\Dev\\voxelengine\\shaders\\material.frag");
+    m_renderer->setDefaultShader(shader);
 
     GLCHECK("");
-    Camera camera;
+    Ref<Camera> camera = createRef<Camera>();
     float camSpeed = 1.0f;
     float camSens = 1.0f;
-    camera.transform.setPosition(0.0f, 0.0f, 3.0f);
-    camera.update();
+    camera->transform.setPosition(0.0f, 0.0f, 3.0f);
+    camera->update();
+    m_renderer->setRenderCamera(camera);
 
     float ar = (float)m_window->getWinProps().width/(float)m_window->getWinProps().height;
-    glm::mat4 proj = glm::perspective(camera.fov, ar, 0.1f, 100.0f);
+    glm::mat4 proj = glm::perspective(camera->fov, ar, 0.1f, 100.0f);
+
+    Chunk chunk(3, 4, BlockType::GROUND);
 
     m_renderer->setClearColor(0.3f, 0.3f, 0.3f);
     
@@ -141,33 +131,34 @@ bool Engine::run() {
 
         // Camera controls
         if (input::isKeyPressed(GLFW_KEY_W))
-            camera.move(CameraDirection::FORWARD, speed);
+            camera->move(CameraDirection::FORWARD, speed);
         if (input::isKeyPressed(GLFW_KEY_S))
-            camera.move(CameraDirection::FORWARD, -speed);
+            camera->move(CameraDirection::FORWARD, -speed);
         if (input::isKeyPressed(GLFW_KEY_D))
-            camera.move(CameraDirection::RIGHT, speed);
+            camera->move(CameraDirection::RIGHT, speed);
         if (input::isKeyPressed(GLFW_KEY_A))
-            camera.move(CameraDirection::RIGHT, -speed);
+            camera->move(CameraDirection::RIGHT, -speed);
         if (input::isKeyPressed(GLFW_KEY_SPACE))
-            camera.move(CameraDirection::UP, speed);
+            camera->move(CameraDirection::UP, speed);
         if (input::isKeyPressed(GLFW_KEY_LEFT_SHIFT))
-            camera.move(CameraDirection::UP, -speed);
+            camera->move(CameraDirection::UP, -speed);
 
         float mouse = input::getMouseXOffset();
         if (mouse)
-            camera.addYaw(mouse * camSens);
+            camera->addYaw(mouse * camSens);
         mouse = input::getMouseYOffset();
         if (mouse)
-            camera.addPitch(-mouse * camSens);
+            camera->addPitch(-mouse * camSens);
 
-        camera.update();
-        cube.update(deltaTime);
+        camera->update();
+        chunk.update(deltaTime);
 
-        proj = glm::perspective(camera.fov, ar, 0.1f, 100.0f);
+        m_renderer->updateProjection();
+        for (const auto& block : chunk.blocks)
+            m_renderer->draw(block);
 
         // here goes the main rendering
         // lets separate the rendering in layers (one for the game, one for the ui, any post processing in between etc)
-        m_renderer->draw(cube, camera, proj);
 
         m_renderer->frameEnd();
         glfwPollEvents();

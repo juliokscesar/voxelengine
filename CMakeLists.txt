@@ -70,6 +70,9 @@ set(SRC_FILES
     ${SRC_DIR}/components/transform.cpp
     ${SRC_DIR}/components/camera.cpp
 
+    ${SRC_DIR}/game/block.cpp
+    ${SRC_DIR}/game/chunk.cpp
+
     ${SRC_DIR}/utils/file_handler.cpp
 
     ${SRC_DIR}/main.cpp
