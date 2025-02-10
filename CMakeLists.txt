@@ -74,6 +74,7 @@ set(SRC_FILES
     ${SRC_DIR}/game/chunk.cpp
 
     ${SRC_DIR}/utils/file_handler.cpp
+    ${SRC_DIR}/utils/image.cpp
 
     ${SRC_DIR}/main.cpp
 )

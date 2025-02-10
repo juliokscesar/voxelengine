@@ -50,7 +50,8 @@ public:
     void setUniformFloat(const std::string& name, float value) const;
     void setUniformVec3(const std::string& name, const glm::vec3& vec) const;
     void setUniformMat4(const std::string& name, const glm::mat4& mat) const;
-    
+
+    uint32_t getUniformLocation(const std::string& name) const;    
 
 private:
     bool initShader(const stdfs::path& vertPath, const stdfs::path& fragPath);
@@ -66,6 +67,8 @@ private:
     uint32_t m_id;
 
     uint32_t m_vertID, m_fragID;
+
+    mutable std::unordered_map<std::string, uint32_t> m_uniformLocCache;
 
     bool m_isUsable;
 

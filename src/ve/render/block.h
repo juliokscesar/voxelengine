@@ -7,12 +7,16 @@ enum class BlockType {
     GROUND = 1,
 };
 
-class Block : public Entity {
+struct BlockMesh {
+    
+};
+
+class Block {
 public:
     Block(const glm::vec3& initialPos, BlockType type, const StaticMesh& mesh);
     ~Block();
 
-    void update(float deltaTime) override;
+    void update(float deltaTime);
 
     BlockType type;
 };

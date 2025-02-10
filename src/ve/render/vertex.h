@@ -9,12 +9,13 @@ struct Vertex {
     glm::vec3 position;
     glm::vec3 normal;
     glm::vec2 texCoords;
+    uint32_t  materialID;
 
     Vertex()
-        : position(0), normal(0), texCoords(0) {}
+        : position(0), normal(0), texCoords(0), materialID(0) {}
 
-    Vertex(const glm::vec3& pos, const glm::vec3& normal, const glm::vec2& texCoords)
-        : position(pos), normal(normal), texCoords(texCoords) {}
+    Vertex(const glm::vec3& pos, const glm::vec3& normal, const glm::vec2& texCoords, uint32_t materialID)
+        : position(pos), normal(normal), texCoords(texCoords), materialID(0) {}
 };
 
 struct VertexArray {
@@ -47,9 +48,11 @@ struct VertexArray {
         return *this;
     }
 
+    void create();
     void init(const std::vector<Vertex>& verticesData);
+    void renderData(const std::vector<Vertex>& verticesData);
     void bind() const;
-    void unbind() const;    
+    void unbind() const;
 };
 
 struct IndexBuffer {

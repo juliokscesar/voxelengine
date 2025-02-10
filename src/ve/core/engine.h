@@ -6,6 +6,8 @@
 #include "window.h"
 #include "resource_manager.h"
 
+#include "game/game.h"
+
 struct GLLibManager {
     bool isGLFWInit = false;
     bool isCtxSet = false;
@@ -36,10 +38,10 @@ struct GLLibManager {
 
 class Engine {
 public:
-    Engine(const WindowProps& winProps);
+    Engine(Ref<Game> game);
     ~Engine();
 
-    bool startup();
+    bool start();
     bool run();
     void shutdown();
 
@@ -47,8 +49,10 @@ private:
     bool m_isUp;
     bool m_isRunning;
 
-    std::unique_ptr<GLLibManager> m_glLibMgr;
-    std::unique_ptr<Renderer> m_renderer;
-    std::unique_ptr<Window> m_window;
-    std::unique_ptr<ResourceManager> m_resMgr;
+    Ref<GLLibManager> m_glLibMgr;
+    Ref<Renderer> m_renderer;
+    Ref<Window> m_window;
+    Ref<ResourceManager> m_resMgr;
+
+    Ref<Game> m_game;
 };

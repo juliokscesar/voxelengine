@@ -1,34 +1,36 @@
 #version 460 core
 
-#define MAX_NUMBER_SAMPLER2D 15
-
-// from material.vert
-//in vec3 fragPos;
-//in vec3 fragNormal;
-in vec2 texCoords;
-
 struct Material {
-    sampler2D diffuseMaps[MAX_NUMBER_SAMPLER2D];
-    //sampler2D specularMaps[MAX_NUMBER_SAMPLER2D];
+    uint diffuse;
+    uint specularMap;
     vec3 ambient;
-    //float shininess;
+    float shininess;
     float tilingFactor;
+    bool isLit;
 };
-uniform Material material;
+layout (std430, binding = 0) buffer MaterialBlock {
+    Material materials[];
+};
+
+uniform sampler2DArray textureArray;
+
 //uniform bool useMaterial;
 
 //uniform vec3 viewPos;
 
-out vec4 fragColor;
+// from material.vert
+//in vec3 fragPos;
+//in vec3 fragNormal;
+flat in uint matID;
+in vec2 texCoords;
+
+out vec4 FragColor;
 void main() {
-    vec2 fragTexCoords  = texCoords * material.tilingFactor;
-
-    // TODO: lighting
-
-    // TODO: implement for more than 1 diffuse and specular texture?
-    vec4 fragTex = texture(material.diffuseMaps[0], fragTexCoords);
-    if (fragTex.a < 0.5)
+    Material mat = materials[matID];
+    
+    vec4 texColor = texture(textureArray, vec3(texCoords, mat.diffuse));
+    if (texColor.a < 0.5)
         discard;
 
-    fragColor = fragTex * vec4(material.ambient, 1.0);
+    FragColor = texColor;
 }

@@ -14,6 +14,13 @@ VertexArray::VertexArray(VertexArray &&other)
     , vboID(std::move(other.vboID))
     , nVertices(std::move(other.nVertices)) {}
 
+void VertexArray::create() {
+    glGenVertexArrays(1, &vaoID);
+    glBindVertexArray(vaoID);
+
+    glGenBuffers(1, &vboID);
+    glBindBuffer(GL_ARRAY_BUFFER, vboID);
+}
 
 void VertexArray::init(const std::vector<Vertex>& verticesData) {
     nVertices = static_cast<uint32_t>(verticesData.size());
@@ -34,6 +41,9 @@ void VertexArray::init(const std::vector<Vertex>& verticesData) {
 
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, ATT_STRIDE, (void*)offsetof(Vertex, texCoords)); // tex vert attrib
     glEnableVertexAttribArray(2);
+
+    glVertexAttribPointer(3, 1, GL_UNSIGNED_INT, GL_FALSE, ATT_STRIDE, (void*)offsetof(Vertex, materialID));
+    glEnableVertexAttribArray(3);
 }
 
 void VertexArray::bind() const {

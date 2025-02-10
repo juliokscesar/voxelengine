@@ -90,7 +90,7 @@ void Shader::clear() {
 }
 
 
-#define GL_ULOC(str) glGetUniformLocation(m_id, str.c_str())
+#define GL_ULOC(str) this->getUniformLocation(str)
 
 void Shader::setUniformUInt(const std::string &name, uint32_t value) const {
     glUniform1ui(GL_ULOC(name), value);
@@ -106,6 +106,15 @@ void Shader::setUniformVec3(const std::string &name, const glm::vec3 &vec) const
 
 void Shader::setUniformMat4(const std::string &name, const glm::mat4 &mat) const {
     glUniformMatrix4fv(GL_ULOC(name), 1, GL_FALSE, glm::value_ptr(mat));
+}
+
+uint32_t Shader::getUniformLocation(const std::string& name) const { 
+    if (auto loc = m_uniformLocCache.find(name); loc != m_uniformLocCache.end())
+        return loc->second;
+    
+    const uint32_t loc = glGetUniformLocation(m_id, name.c_str());
+    m_uniformLocCache[name] = loc;
+    return loc;
 }
 
 bool Shader::initShader(const stdfs::path& vertPath, const stdfs::path& fragPath) {

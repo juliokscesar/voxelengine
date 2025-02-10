@@ -2,6 +2,7 @@
 
 #include "core/base.h"
 #include "block.h"
+#include "vertex.h"
 
 class Chunk {
 public:
@@ -9,9 +10,10 @@ public:
     ~Chunk();
 
     void init(BlockType fillBlock);
-    void update(float deltaTime);
+    void update();
 
 private:
+    void updateGPUMesh();
     void checkAndHideBlocks();
 
     Block& blockFromRelXYZ(uint32_t x, uint32_t y, uint32_t z);
@@ -26,6 +28,9 @@ public:
 
 private:
     bool m_hasUpdated = false;
+
+    VertexArray m_va;
+    IndexBuffer m_ib;
 };
 
 
