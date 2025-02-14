@@ -66,12 +66,12 @@ set(SRC_FILES
     ${SRC_DIR}/render/texture.cpp
     ${SRC_DIR}/render/staticmesh.cpp
     ${SRC_DIR}/render/material.cpp
+    ${SRC_DIR}/render/block.cpp
+    ${SRC_DIR}/render/chunk.cpp
 
     ${SRC_DIR}/components/transform.cpp
     ${SRC_DIR}/components/camera.cpp
 
-    ${SRC_DIR}/game/block.cpp
-    ${SRC_DIR}/game/chunk.cpp
 
     ${SRC_DIR}/utils/file_handler.cpp
     ${SRC_DIR}/utils/image.cpp

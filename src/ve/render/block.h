@@ -7,18 +7,15 @@ enum class BlockType {
     GROUND = 1,
 };
 
-struct BlockMesh {
-    
-};
-
 class Block {
 public:
-    Block(const glm::vec3& initialPos, BlockType type, const StaticMesh& mesh);
+    Block(BlockType type);
     ~Block();
 
-    void update(float deltaTime);
+    void setType(BlockType type);
+    bool isSolid() const;
 
     BlockType type;
 };
 
-Block blockBuilder(BlockType type, const glm::vec3& initPos);
+// Block blockBuilder(BlockType type, const glm::vec3& initPos);
